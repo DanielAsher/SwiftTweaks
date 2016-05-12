@@ -20,12 +20,12 @@ public final class TweaksViewController: UIViewController {
 
 	private var navController: UINavigationController! // self required for init
 
-	public unowned var delegate: TweaksViewControllerDelegate
+	public weak var delegate: TweaksViewControllerDelegate?
 	internal var floatingTweaksWindowPresenter: FloatingTweaksWindowPresenter?
 
 	internal static let dismissButtonTitle = NSLocalizedString("Dismiss", comment: "Button to dismiss TweaksViewController.")
 
-	public init(tweakStore: TweakStore, delegate: TweaksViewControllerDelegate) {
+	public init(tweakStore: TweakStore, delegate: TweaksViewControllerDelegate?) {
 		self.tweakStore = tweakStore
 		self.delegate = delegate
 
@@ -44,11 +44,11 @@ public final class TweaksViewController: UIViewController {
 
 extension TweaksViewController: TweaksRootViewControllerDelegate {
 	internal func tweaksRootViewControllerDidPressDismissButton(tweaksRootViewController: TweaksRootViewController) {
-		delegate.tweaksViewControllerRequestsDismiss(self, completion: nil)
+		delegate?.tweaksViewControllerRequestsDismiss(self, completion: nil)
 	}
 
 	internal func tweaksRootViewController(tweaksRootViewController: TweaksRootViewController, requestsFloatingUIForTweakGroup tweakGroup: TweakGroup) {
-		delegate.tweaksViewControllerRequestsDismiss(self) {
+		delegate?.tweaksViewControllerRequestsDismiss(self) {
 			self.floatingTweaksWindowPresenter?.presentFloatingTweaksUIForTweakGroup(tweakGroup)
 		}
 	}
