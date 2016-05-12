@@ -121,13 +121,18 @@ class ViewController: UIViewController, TweaksViewControllerDelegate {
 	}
 
     var tweaksViewController : TweaksViewController?
-    func presentTweaksViewControler() {
+    func presentTweaksViewController() {
         tweaksViewController = TweaksViewController(tweakStore: ExampleTweaks.defaultStore, delegate: self)
         self.presentViewController(tweaksViewController!, animated: true, completion: nil)
     }
 
     func tweaksViewControllerRequestsDismiss(tweaksViewController: TweaksViewController, completion: (() -> ())?) {
         tweaksViewController.dismissViewControllerAnimated(true, completion: completion)
+    }
+    
+    func presentTweakWindowTweaksViewController() {
+        guard let tweakWindow = UIApplication.sharedApplication().keyWindow as? TweakWindow else { return }
+        self.presentViewController(tweakWindow.tweaksViewController, animated: true, completion: nil)
     }
 	// MARK: Events
 
@@ -151,7 +156,7 @@ class ViewController: UIViewController, TweaksViewControllerDelegate {
 					animations: {
 						self.bounceButton.frame = originalFrame
 					},
-					completion: { _ in self.presentTweaksViewControler() }
+					completion: { _ in self.presentTweakWindowTweaksViewController() }
 				)
 			}
 		)
