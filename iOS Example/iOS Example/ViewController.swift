@@ -127,7 +127,7 @@ class ViewController: UIViewController, TweaksViewControllerDelegate {
     }
 
     func tweaksViewControllerRequestsDismiss(tweaksViewController: TweaksViewController, completion: (() -> ())?) {
-        tweaksViewController.dismissViewControllerAnimated(true, completion: nil)
+        tweaksViewController.dismissViewControllerAnimated(true, completion: completion)
     }
 	// MARK: Events
 
