@@ -9,7 +9,7 @@
 import UIKit
 import SwiftTweaks
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, TweaksViewControllerDelegate {
 
 	private let titleLabel: UILabel = {
 		let label = UILabel()
@@ -120,7 +120,15 @@ class ViewController: UIViewController {
 		// Dispose of any resources that can be recreated.
 	}
 
+    var tweaksViewController : TweaksViewController?
+    func presentTweaksViewControler() {
+        tweaksViewController = TweaksViewController(tweakStore: ExampleTweaks.defaultStore, delegate: self)
+        self.presentViewController(tweaksViewController!, animated: true, completion: nil)
+    }
 
+    func tweaksViewControllerRequestsDismiss(tweaksViewController: TweaksViewController, completion: (() -> ())?) {
+        tweaksViewController.dismissViewControllerAnimated(true, completion: nil)
+    }
 	// MARK: Events
 
 	@objc private func bounceButtonPressed(sender: UIButton) {
@@ -143,7 +151,7 @@ class ViewController: UIViewController {
 					animations: {
 						self.bounceButton.frame = originalFrame
 					},
-					completion: nil
+					completion: { _ in self.presentTweaksViewControler() }
 				)
 			}
 		)
