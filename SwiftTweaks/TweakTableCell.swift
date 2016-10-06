@@ -204,42 +204,55 @@ internal final class TweakTableCell: UITableViewCell {
 			switchControl.isOn = value
 			textFieldEnabled = false
 
-		case let .integer(value: value, _, _, _, stepSize: step):
-			stepperControl.value = Double(value)
-			(stepperControl.minimumValue, stepperControl.maximumValue) = viewData.stepperLimits!
-			stepperControl.stepValue = Double(step ?? 1)
+//		case let .integer(value: value, _, _, _, stepSize: step):
+//			stepperControl.value = Double(value)
+//			(stepperControl.minimumValue, stepperControl.maximumValue,
+//            stepperControl.stepValue) = viewData.stepperValues!
+//			stepperControl.stepValue = Double(step ?? 1)
+		case let .color(value: value, _):
+			colorChit.backgroundColor = value
+			textField.text = value.hexString
+			textFieldEnabled = false
 
-			textField.text = String(value)
+		case .integer:
+			let doubleValue = viewData.doubleValue!
+			self.updateStepper(value: doubleValue, stepperValues: viewData.stepperValues!)
+
+			textField.text = String(doubleValue)
 			textField.keyboardType = .numberPad
 			textFieldEnabled = true
 
 		case let .float(value: value, _, _, _, stepSize: step):
 			stepperControl.value = Double(value)
-			(stepperControl.minimumValue, stepperControl.maximumValue) = viewData.stepperLimits!
+			(stepperControl.minimumValue, stepperControl.maximumValue, stepperControl.stepValue) = viewData.stepperValues!
             
-            if let step = step {
-                stepperControl.stepValue = Double(step)
-            } else {
-                stepperControl.stepValue = Double((stepperControl.maximumValue - stepperControl.minimumValue)/100)
-            }
-
-			textField.text = value.stringValueRoundedToNearest(.thousandth)
+//            if let step = step {
+//                stepperControl.stepValue = Double(step)
+//            } else {
+//                stepperControl.stepValue = Double((stepperControl.maximumValue - stepperControl.minimumValue)/100)
+//            }
+//		case .float, .doubleTweak:
+//			let doubleValue = viewData.doubleValue!
+//			self.updateStepper(value: doubleValue, stepperValues: viewData.stepperValues!)
+//
+			textField.text = viewData.doubleValue!.stringValueRoundedToNearest(.thousandth)
 			textField.keyboardType = .decimalPad
 			textFieldEnabled = true
 
 		case let .doubleTweak(value: value, _, _, _, stepSize: step):
 			stepperControl.value = value
-			(stepperControl.minimumValue, stepperControl.maximumValue) = viewData.stepperLimits!
-			stepperControl.stepValue = step ?? (stepperControl.maximumValue - stepperControl.minimumValue)/100
+			(stepperControl.minimumValue, stepperControl.maximumValue,
+            stepperControl.stepValue) = viewData.stepperValues!
+//			stepperControl.stepValue = step ?? (stepperControl.maximumValue - stepperControl.minimumValue)/100
 
 			textField.text = value.stringValueRoundedToNearest(.thousandth)
 			textField.keyboardType = .decimalPad
 			textFieldEnabled = true
 
-		case let .color(value: value, _):
-			colorChit.backgroundColor = value
-			textField.text = value.hexString
-			textFieldEnabled = false
+//		case let .color(value: value, _):
+//			colorChit.backgroundColor = value
+//			textField.text = value.hexString
+//			textFieldEnabled = false
 
 		}
 
@@ -250,7 +263,7 @@ internal final class TweakTableCell: UITableViewCell {
 
 	}
 
-	private func updateStepper(value value: Double, stepperValues: TweakViewData.StepperValues) {
+	private func updateStepper(value: Double, stepperValues: TweakViewData.StepperValues) {
 		stepperControl.minimumValue = stepperValues.stepperMin
 		stepperControl.maximumValue = stepperValues.stepperMax
 		stepperControl.stepValue = stepperValues.stepSize

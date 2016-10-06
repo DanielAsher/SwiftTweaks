@@ -44,11 +44,11 @@ public final class TweaksViewController: UIViewController {
 
 extension TweaksViewController: TweaksRootViewControllerDelegate {
 	internal func tweaksRootViewControllerDidPressDismissButton(_ tweaksRootViewController: TweaksRootViewController) {
-		delegate.tweaksViewControllerRequestsDismiss(self, completion: nil)
+		delegate?.tweaksViewControllerRequestsDismiss(self, completion: nil)
 	}
 
 	internal func tweaksRootViewController(_ tweaksRootViewController: TweaksRootViewController, requestsFloatingUIForTweakGroup tweakGroup: TweakGroup) {
-		delegate.tweaksViewControllerRequestsDismiss(self) {
+		delegate?.tweaksViewControllerRequestsDismiss(self) {
 			self.floatingTweaksWindowPresenter?.presentFloatingTweaksUI(forTweakGroup: tweakGroup)
 		}
 	}
