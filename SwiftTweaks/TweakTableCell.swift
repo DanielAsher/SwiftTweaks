@@ -204,38 +204,26 @@ internal final class TweakTableCell: UITableViewCell {
 			switchControl.on = value
 			textFieldEnabled = false
 
-		case let .Integer(value: value, _, _, _, stepSize: step):
-			stepperControl.value = Double(value)
-			(stepperControl.minimumValue, stepperControl.maximumValue) = viewData.stepperLimits!
-			stepperControl.stepValue = Double(step ?? 1)
-
-			textField.text = String(value)
-			textField.keyboardType = .NumberPad
-			textFieldEnabled = true
-
-		case let .Float(value: value, _, _, _, stepSize: step):
-			stepperControl.value = Double(value)
-			(stepperControl.minimumValue, stepperControl.maximumValue) = viewData.stepperLimits!
-			stepperControl.stepValue = Double(step ?? (stepperControl.maximumValue - stepperControl.minimumValue)/100)
-
-			textField.text = value.stringValueRoundedToNearest(.Thousandth)
-			textField.keyboardType = .DecimalPad
-			textFieldEnabled = true
-
-		case let .DoubleTweak(value: value, _, _, _, stepSize: step):
-			stepperControl.value = value
-			(stepperControl.minimumValue, stepperControl.maximumValue) = viewData.stepperLimits!
-			stepperControl.stepValue = step ?? (stepperControl.maximumValue - stepperControl.minimumValue)/100
-
-			textField.text = value.stringValueRoundedToNearest(.Thousandth)
-			textField.keyboardType = .DecimalPad
-			textFieldEnabled = true
-
 		case let .Color(value: value, _):
 			colorChit.backgroundColor = value
 			textField.text = value.hexString
 			textFieldEnabled = false
 
+		case .Integer:
+			let doubleValue = viewData.doubleValue!
+			self.updateStepper(value: doubleValue, stepperValues: viewData.stepperValues!)
+
+			textField.text = String(doubleValue)
+			textField.keyboardType = .NumberPad
+			textFieldEnabled = true
+
+		case .Float, .DoubleTweak:
+			let doubleValue = viewData.doubleValue!
+			self.updateStepper(value: doubleValue, stepperValues: viewData.stepperValues!)
+
+			textField.text = viewData.doubleValue!.stringValueRoundedToNearest(.Thousandth)
+			textField.keyboardType = .DecimalPad
+			textFieldEnabled = true
 		}
 
 		textFieldEnabled = textFieldEnabled && !self.isInFloatingTweakGroupWindow
@@ -243,6 +231,13 @@ internal final class TweakTableCell: UITableViewCell {
 		textField.userInteractionEnabled = textFieldEnabled
 		textField.textColor = textFieldEnabled ? AppTheme.Colors.textPrimary : AppTheme.Colors.controlSecondary
 
+	}
+
+	private func updateStepper(value value: Double, stepperValues: TweakViewData.StepperValues) {
+		stepperControl.minimumValue = stepperValues.stepperMin
+		stepperControl.maximumValue = stepperValues.stepperMax
+		stepperControl.stepValue = stepperValues.stepSize
+		stepperControl.value = value
 	}
 
 
